@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Auburn Roster</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://use.typekit.net/qir6hpe.css">
+
+</head>
+
+<body>
+    <main>
+        <div class="roster_holder">
+            <div class="title"><span>2023</span> Auburn Roster</div>
+            <table class="styled-table sortable">
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>NAME</th>
+                        <th>POS</th>
+                        <th>HT</th>
+                        <th>WT</th>
+                        <th>CLASS</th>
+                        <th>HOMETOWN/HIGH SCHOOL</th>
+                    </tr>   
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script>
+        $.getJSON("https://opensheet.elk.sh/1W_JLDkiuycZCo54Rvrjxt9AE4CiV3c7IR-eZWn-97I0/sheet1", function (data) {
+                console.log(data)
+                // var items = [];
+                data.forEach(function (player, i) {
+                    console.log(player)
+                    var row = $("<tr><td>" + player.NO + "</td><td>" + player.NAME + "</td><td>" + player.POS + "</td><td>" + player.HT + "</td><td>" + player.WT + "</td><td>" + player.CLASS + "</td><td>" + player.HOMETOWN__HIGH_SCHOOL + "</td></tr>")
+                    $("table tbody").append(row)
+                    if (i === data.length -1) {
+                        $('th').click(function () {
+                            var table = $(this).parents('table').eq(0)
+                            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+                            this.asc = !this.asc
+                            if (!this.asc) { rows = rows.reverse() }
+                            for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+                        })
+                        function comparer(index) {
+                            return function (a, b) {
+                                var valA = getCellValue(a, index), valB = getCellValue(b, index)
+                                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+                            }
+                        }
+                        function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+                    }
+                });
+
+            });
+    </script>
+</body>
+
+</html>
